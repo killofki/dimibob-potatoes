@@ -73,16 +73,16 @@ function save ( value, path ) {
 async function parseArticle ({ href }) { 
 	try { 
 		const html = await cache( href ); 
-		if ( WORDS .every( w => ! html .includes( w ) ) ) 
+		if ( WORDS .every( w => ! html .includes( w ) ) ) // pre check ..? 
 			{ return; } 
 		
 		const $ = cheerio .load( html ); 
-		const map = $( 'div.xe_content p' ) .map( ( i, e ) => { 
+		const list = $( 'div.xe_content p' ) .map( ( i, e ) => { 
 			const [ k, v ] = $( e ) .text() .split( ':' ) .map( v => v .trim() ); 
 			return MEALS[ k ] && v .split( /[*/&]/ ) .map( v => v .trim() ); 
 			} ); 
 		
-		map .get() .forEach( v => { 
+		list .get() .forEach( v => { 
 			if ( ! v || WORDS .every( w => ! v .includes( w ) ) ) 
 				{ return; } 
 			let pv = potatoes[ v ] || 0; 
