@@ -17,17 +17,28 @@ async function fetchArticles () {
 	const articles = []; 
 	const params = { mid: 'school_cafeteria', page: 1 }; 
 	
+	const mapperDefault = e => text() .trim(); 
+	const mapperEntries = [{ 
+		  title : [ 'td.title' ] 
+		, date : [ 'td.regdate' ] 
+		, href : [ 'td.title a', e => e .attr( 'href' ) ] 
+		}] .entries(); 
+	
+	const mapper = e => Object .assign( ... 
+		mapperEntries .map( ( p, [ q, selF = mapperDefault ] ) => 
+			({ [ p ] : selF( $( e ) .find ( q ) ) }) 
+			) 
+		); 
+	
 	while ( true ) { 
 		const $ = cheerio .load( 
 			( await axios .get( URL, { params } ) ) 
 			.data 
 			); 
 		
-		const list = $( '#dimigo_post_cell_2 tr' ) .map( ( i, e ) => ({ 
-			  title: $( e ) .find( 'td.title' ) .text() .trim() 
-			, date: $( e ) .find( 'td.regdate' ) .text() .trim() 
-			, href: $( e ) .find( 'td.title a' ) .attr( 'href' ) 
-			}) ) .get(); 
+		const list = $( '#dimigo_post_cell_2 tr' ) .map( ( i, e ) => 
+			mapper( e ) 
+			) .get(); 
 		
 		const next = $( 'a.direction.next' ) .attr( 'href' ); 
 		const page = parseInt( url .parse( next, true ) .query .page ); 
