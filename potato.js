@@ -62,7 +62,11 @@ function cache ( href ) {
 	} // -- cache() 
 
 function save ( value, path ) { 
-	fs .writeFileSync( path, typeof value === 'string' ? value : JSON .stringify( value, null, 2 ) ); 
+	fs .writeFileSync( 
+		  path
+		, typeof value === 'string' ? value 
+			: JSON .stringify( value, null, 2 ) 
+		); 
 	return value; 
 	} // -- save() 
 
