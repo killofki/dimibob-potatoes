@@ -17,6 +17,8 @@ async function fetchArticles () {
 	const articles = []; 
 	const params = { mid: 'school_cafeteria', page: 1 }; 
 	
+	const pipe = ( ... ar ) => ar .reduce( ( v, F ) => F( v ) ); 
+	
 	const mapperDefault = e => text() .trim(); 
 	const mapperEntries = [{ 
 		  title : [ 'td.title' ] 
@@ -26,7 +28,7 @@ async function fetchArticles () {
 	
 	const mapper = e => Object .assign( ... 
 		mapperEntries .map( ( p, [ q, selF = mapperDefault ] ) => 
-			({ [ p ] : selF( $( e ) .find ( q ) ) }) 
+			({ [ p ] : pipe( $( e ) .find( q ), selF ) }) 
 			) 
 		); 
 	
@@ -54,12 +56,9 @@ async function fetchArticles () {
 function cache ( href ) { 
 	const path = `${ CACHE }/${ url .parse( href, true ) .query .document_srl }.html`; 
 
-	if ( fs .existsSync( path ) ) { 
-		return fs .readFileSync( path, 'utf8' ); 
-		} 
-	else { 
-		return axios .get( href ) .then( ({ data }) => save( data, path ) ); 
-		} 
+	return fs .existsSync( path ) ? fs .readFileSync( path, 'utf8' ) 
+		: axios .get( href ) .then( ({ data }) => save( data, path ) ) 
+		; 
 	} // -- cache() 
 
 function save ( value, path ) { 
@@ -96,8 +95,8 @@ function savePotatoes () {
 	fs .writeFileSync( 
 		  'potatoes.txt'
 		, [ ... Object .entries( potatoes ) ] 
-			.sort( ( a, b ) => b[ 1 ] - a[ 1 ] || a[ 0 ] .localeCompare( b[ 0 ] ) ) 
-			.map( v => `[${ v[ 1 ] .toString() .padStart( 2, '0' ) }] ${ v[ 0 ] }` ) 
+			.sort( ( [ ap, av ], [ bp, bv ] ) => bv - av || ap .localeCompare( bp ) ) 
+			.map( ([ p, v ]) => `[${ v .toString() .padStart( 2, '0' ) }] ${ p }` ) 
 			.join( '\n' ) 
 		); 
 	} // -- savePotatoes() 
