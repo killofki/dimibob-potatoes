@@ -18,7 +18,10 @@ async function fetchArticles () {
 	const params = { mid: 'school_cafeteria', page: 1 }; 
 	
 	while ( true ) { 
-		const $ = cheerio .load( ( await axios .get( URL, { params } ) ) .data ); 
+		const $ = cheerio .load( 
+			( await axios .get( URL, { params } ) ) 
+			.data 
+			); 
 		
 		const list = $( '#dimigo_post_cell_2 tr' ) .map( ( i, e ) => ({ 
 			  title: $( e ) .find( 'td.title' ) .text() .trim() 
