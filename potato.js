@@ -1,11 +1,13 @@
-const fs = require('fs'); 
-const url = require('url'); 
-const axios = require('axios'); 
-const cheerio = require('cheerio'); 
+const [ fs, url, axios, cheerio ] = [ 'fs', 'url', 'axios', 'cheerio' ] .map( v => require( v ) ); 
 
 const URL = 'https://www.dimigo.hs.kr/index.php'; 
 const FILTER = article => /^(\d+)월.*?(\d+)일.*?식단.*$/ .test( article .title ); 
-const MEALS = { '조식': 'breakfast', '중식': 'lunch', '석식': 'dinner', '간식': 'snack' }; 
+const MEALS = { 
+	  '조식': 'breakfast' 
+	, '중식': 'lunch' 
+	, '석식': 'dinner' 
+	, '간식': 'snack' 
+	}; 
 
 let potatoes = {}; 
 const CACHE = './cache'; 
@@ -19,14 +21,14 @@ async function fetchArticles () {
 		const $ = cheerio .load( ( await axios .get( URL, { params } ) ) .data ); 
 		
 		const list = $( '#dimigo_post_cell_2 tr' ) .map( ( i, e ) => ({ 
-			title: $(e).find('td.title').text().trim(), 
-			date: $(e).find('td.regdate').text().trim(), 
-			href: $(e).find('td.title a').attr('href') 
+			  title: $( e ) .find( 'td.title' ) .text() .trim() 
+			, date: $( e ) .find( 'td.regdate' ) .text() .trim() 
+			, href: $( e ) .find( 'td.title a' ) .attr( 'href' ) 
 			}) ) .get(); 
-
+		
 		const next = $( 'a.direction.next' ) .attr( 'href' ); 
 		const page = parseInt( url .parse( next, true ) .query .page ); 
-
+		
 		articles .push( ... list ); 
 		console .log( 'page', params .page, list ); 
 		if ( params .page ++ >= page ) { 
