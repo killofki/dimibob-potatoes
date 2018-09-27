@@ -66,9 +66,9 @@ function save ( value, path ) {
 	return value; 
 	} // -- save() 
 
-async function parseArticle ( article ) { 
+async function parseArticle ({ href }) { 
 	try { 
-		const html = await cache( article .href ); 
+		const html = await cache( href ); 
 		if ( WORDS .every( w => ! html .includes( w ) ) ) 
 			{ return; } 
 		
@@ -86,7 +86,7 @@ async function parseArticle ( article ) {
 			}); 
 		} 
 	catch ( e ) { 
-		console .log( 'parse failed:', article .href, e .message ); 
+		console .log( 'parse failed:', href, e .message ); 
 		} 
 	} // -- parseArticle() 
 
