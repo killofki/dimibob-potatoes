@@ -11,7 +11,7 @@ const MEALS = {
 
 let potatoes = {}; 
 const CACHE = './cache'; 
-const WORDS = ['감자', '포테이토', '포테토']; 
+const WORDS = [ '감자', '포테이토', '포테토' ]; 
 
 async function fetchArticles () { 
 	const articles = []; 
