@@ -40,7 +40,7 @@ async function fetchArticles () {
 		
 		const list = $( '#dimigo_post_cell_2 tr' ) .map( ( i, e ) => 
 			mapper( e ) 
-			) .get(); 
+			) .get(); // https://api.jquery.com/get/
 		
 		const next = $( 'a.direction.next' ) .attr( 'href' ); 
 		const page = parseInt( url .parse( next, true ) .query .page ); 
@@ -82,12 +82,15 @@ async function parseArticle ({ href }) {
 			return MEALS[ k ] && v .split( /[*/&]/ ) .map( v => v .trim() ); 
 			} ); 
 		
-		picks .get() .forEach( v => { 
+		picks 
+		.get() // https://api.jquery.com/get/ 
+		.forEach( v => { 
 			if ( ! v || WORDS .every( w => ! v .includes( w ) ) ) 
 				{ return; } 
 			let pv = potatoes[ v ] || 0; 
 			potatoes[ v ] = pv + 1; 
-			}); 
+			}) 
+			; 
 		} 
 	catch ( e ) { 
 		console .log( 'parse failed:', href, e .message ); 
