@@ -81,9 +81,8 @@ async function parseArticle ( article ) {
 		map .get() .forEach( v => { 
 			if ( ! v || WORDS .every( w => ! v .includes( w ) ) ) 
 				{ return; } 
-			
-			potatoes[ v ] = potatoes[ v ] || 0; 
-			potatoes[ v ] += 1; 
+			let pv = potatoes[ v ] || 0; 
+			potatoes[ v ] = pv + 1; 
 			}); 
 		} 
 	catch ( e ) { 
