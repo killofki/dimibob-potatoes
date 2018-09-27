@@ -77,12 +77,12 @@ async function parseArticle ({ href }) {
 			{ return; } 
 		
 		const $ = cheerio .load( html ); 
-		const list = $( 'div.xe_content p' ) .map( ( i, e ) => { 
+		const picks = $( 'div.xe_content p' ) .map( ( i, e ) => { 
 			const [ k, v ] = $( e ) .text() .split( ':' ) .map( v => v .trim() ); 
 			return MEALS[ k ] && v .split( /[*/&]/ ) .map( v => v .trim() ); 
 			} ); 
 		
-		list .get() .forEach( v => { 
+		picks .get() .forEach( v => { 
 			if ( ! v || WORDS .every( w => ! v .includes( w ) ) ) 
 				{ return; } 
 			let pv = potatoes[ v ] || 0; 
